@@ -16,6 +16,5 @@ plugins {
   alias(libs.plugins.google.secrets) apply false
   alias(libs.plugins.baseline.profile) apply false
   alias(libs.plugins.android.library) apply false
-  alias(libs.plugins.kotlinAndroid) apply false
   alias(libs.plugins.android.test) apply false
 }
