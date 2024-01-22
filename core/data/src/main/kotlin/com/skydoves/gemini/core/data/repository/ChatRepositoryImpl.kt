@@ -1,0 +1,69 @@
+/*
+ * Designed and developed by 2024 skydoves (Jaewoong Eum)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.skydoves.gemini.core.data.repository
+
+import com.google.ai.client.generativeai.Chat
+import com.google.ai.client.generativeai.GenerativeModel
+import com.google.ai.client.generativeai.type.Content
+import com.google.ai.client.generativeai.type.GenerateContentResponse
+import com.skydoves.gemini.core.database.GeminiDao
+import com.skydoves.gemini.core.database.toDomain
+import com.skydoves.gemini.core.model.GeminiChannel
+import com.skydoves.gemini.core.network.Dispatcher
+import com.skydoves.gemini.core.network.GeminiDispatchers
+import io.getstream.chat.android.client.ChatClient
+import io.getstream.result.onSuccessSuspend
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+
+/** The exposed abstraction layer of the [ChatRepository]. */
+internal class ChatRepositoryImpl @Inject constructor(
+  @Dispatcher(GeminiDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+  private val chatClient: ChatClient,
+  private val geminiDao: GeminiDao
+) : ChatRepository {
+
+  override suspend fun summaryContent(
+    generativeModel: GenerativeModel,
+    prompt: String
+  ): GenerateContentResponse = generativeModel.generateContent(prompt = prompt)
+
+  override suspend fun sendMessage(chat: Chat, prompt: String): GenerateContentResponse {
+    return chat.sendMessage(prompt = prompt)
+  }
+
+  override suspend fun photoReasoning(
+    generativeModel: GenerativeModel,
+    content: Content
+  ) = generativeModel.generateContent(content)
+
+  override fun watchIsChannelMessageEmpty(cid: String): Flow<Boolean> = flow {
+    val result = chatClient.channel(cid).watch().await()
+    result.onSuccessSuspend { channel ->
+      val messages = channel.messages
+      emit(messages.isEmpty())
+    }
+  }.flowOn(ioDispatcher)
+
+  override fun getGeminiChannel(key: String): Flow<GeminiChannel> = flow {
+    val geminiChannel = geminiDao.getGeminiChannel(key = key).toDomain()
+    emit(geminiChannel)
+  }
+}
