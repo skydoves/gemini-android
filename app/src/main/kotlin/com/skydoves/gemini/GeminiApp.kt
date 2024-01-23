@@ -17,6 +17,7 @@
 package com.skydoves.gemini
 
 import android.app.Application
+import com.skydoves.snitcher.Snitcher
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -27,6 +28,6 @@ class GeminiApp : Application() {
 
     // install Snitcher to trace global exceptions and restore the app.
     // https://github.com/skydoves/snitcher
-//    Snitcher.install(this)
+    Snitcher.install(this)
   }
 }
