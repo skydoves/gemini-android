@@ -62,7 +62,7 @@ To build this project properly, you should follow the instructions below:
 
 5. Fill in the blanks like the below and click the **Create App** button.
 
-![stream](figures/stream2.png)
+<img width="44%" src = "figures/stream2.png">
 
 6. You will see the **Key** like the image below and then copy it.
 
@@ -88,7 +88,7 @@ STREAM_API_KEY=..
 
 12. Click **users** -> **Create New User** button sequentially and add fill in the user like the below:
 
-![stream](figures/stream6.png)
+<img width="48%" src = "figures/stream6.png">
 
 - User Name: `gemini`
 - User ID: `gemini`
