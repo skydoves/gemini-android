@@ -34,9 +34,5 @@ dependencies {
   implementation(libs.androidx.lifecycle.viewModelCompose)
   implementation(libs.androidx.startup)
 
-  implementation(libs.androidx.worker)
-  implementation(libs.hilt.worker)
-  implementation(libs.viewmodel.lifecycle)
-
   implementation(libs.balloon.compose)
 }
