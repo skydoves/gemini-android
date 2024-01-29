@@ -1,4 +1,5 @@
-<h1 align="center">Gemini Android</h1></br>
+
+![Gemini Cover](https://github.com/skydoves/gemini-android/assets/24237865/bf8e6cc9-3729-49f8-8f50-b45d6649668f)
 
 <p align="center">
   <a href="https://opensource.org/licenses/Apache-2.0"><img alt="License" src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"/></a>
