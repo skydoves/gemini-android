@@ -167,7 +167,7 @@ For more information about the overall architecture, check out **[Build a Real-T
 
 ## Modularization
 
-![02](https://github.com/skydoves/gemini-android/assets/24237865/579182d5-1a65-4e1d-b337-0f0482ae3816)
+![02](https://github.com/skydoves/gemini-android/assets/24237865/7b0cc635-83b0-434c-b151-d0e0e0a2ff9b)
 
 **Gemini Android** has implemented the following modularization strategies:
 
