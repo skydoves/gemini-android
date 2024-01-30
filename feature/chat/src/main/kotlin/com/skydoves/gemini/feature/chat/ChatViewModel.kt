@@ -25,6 +25,7 @@ import com.google.ai.client.generativeai.Chat
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.skydoves.gemini.core.data.chat.STREAM_CHANNEL_GEMINI_FLAG
+import com.skydoves.gemini.core.data.chat.geminiUser
 import com.skydoves.gemini.core.data.coroutines.asStateFlow
 import com.skydoves.gemini.core.data.repository.ChatRepository
 import com.skydoves.gemini.core.data.utils.Empty
@@ -35,6 +36,8 @@ import com.skydoves.gemini.feature.chat.extension.toGenerativeModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.getstream.chat.android.client.ChatClient
 import io.getstream.chat.android.models.Message
+import io.getstream.chat.android.ui.common.state.messages.list.MessageItemState
+import io.getstream.chat.android.ui.common.state.messages.list.MessageListItemState
 import io.getstream.log.streamLog
 import java.io.FileInputStream
 import java.util.UUID
@@ -80,6 +83,20 @@ class ChatViewModel @Inject constructor(
 
   val isMessageEmpty: StateFlow<Boolean> = repository
     .watchIsChannelMessageEmpty(channelId).asStateFlow(false)
+
+  fun addHistories(messages: List<MessageListItemState>) {
+    val history = generativeChat.value?.history
+    if (history?.isEmpty() == true) {
+      messages.filterIsInstance(MessageItemState::class.java).forEach { messageState ->
+        val content = if (messageState.currentUser?.id == geminiUser.id) {
+          content(role = "model") { text(messageState.message.text) }
+        } else {
+          content(role = "user") { text(messageState.message.text) }
+        }
+        history.add(content)
+      }
+    }
+  }
 
   fun sendStreamChatMessage(text: String) {
     viewModelScope.launch {

@@ -136,7 +136,7 @@ fun GeminiChat(
 
   BackHandler(enabled = true, onBack = backAction)
 
-  HandleToastMessages()
+  HandleChatUiStates(listViewModel = listViewModel)
 
   GeminiComposeTheme {
     Box(modifier = Modifier.fillMaxSize()) {
@@ -543,11 +543,13 @@ private fun BoxScope.MessagesScreenMenus(
 }
 
 @Composable
-private fun HandleToastMessages(
+private fun HandleChatUiStates(
+  listViewModel: MessageListViewModel,
   viewModel: ChatViewModel = hiltViewModel()
 ) {
   val context = LocalContext.current
   val isMessageEmpty by viewModel.isMessageEmpty.collectAsState()
+  val messages = listViewModel.currentMessagesState
   val error by viewModel.errorMessage.collectAsState()
 
   LaunchedEffect(key1 = isMessageEmpty) {
@@ -556,6 +558,7 @@ private fun HandleToastMessages(
         context.getString(com.skydoves.gemini.core.designsystem.R.string.message_hello)
       )
     }
+    viewModel.addHistories(messages.messageItems)
   }
 
   LaunchedEffect(key1 = error) {
