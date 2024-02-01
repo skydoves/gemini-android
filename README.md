@@ -167,6 +167,8 @@ For more information about the overall architecture, check out **[Build a Real-T
 
 ## Modularization
 
+![02](https://github.com/skydoves/gemini-android/assets/24237865/7b0cc635-83b0-434c-b151-d0e0e0a2ff9b)
+
 **Gemini Android** has implemented the following modularization strategies:
 
 - **Reusability**: By effectively modularizing reusable code, it not only facilitates code sharing but also restricts code access across different modules.
