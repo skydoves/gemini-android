@@ -17,33 +17,12 @@
 package com.skydoves.gemini.core.designsystem.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.graphics.Color
 import com.skydoves.gemini.core.designsystem.chat.GeminiReactionFactory
 import io.getstream.chat.android.compose.ui.theme.ChatTheme
 import io.getstream.chat.android.compose.ui.theme.StreamColors
-
-private val DarkGeminiColorScheme = darkColorScheme(
-  primary = STREAM_PRIMARY,
-  primaryContainer = STREAM_PRIMARY,
-  secondary = STREAM_PRIMARY,
-  background = STREAM_PRIMARY,
-  tertiary = WHITE200,
-  onTertiary = GRAY200
-)
-
-private val LightGeminiColorScheme = lightColorScheme(
-  primary = STREAM_PRIMARY,
-  primaryContainer = STREAM_PRIMARY,
-  secondary = STREAM_PRIMARY,
-  background = WHITE200,
-  tertiary = WHITE200,
-  onTertiary = GRAY200
-)
 
 /** Light Android background theme */
 private val LightAndroidBackgroundTheme = BackgroundTheme(color = Color.White)
@@ -56,34 +35,28 @@ fun GeminiComposeTheme(
   darkTheme: Boolean = isSystemInDarkTheme(),
   content: @Composable () -> Unit
 ) {
-  val colorScheme = if (darkTheme) DarkGeminiColorScheme else LightGeminiColorScheme
   val backgroundTheme = if (darkTheme) DarkAndroidBackgroundTheme else LightAndroidBackgroundTheme
 
   CompositionLocalProvider(
     LocalBackgroundTheme provides backgroundTheme
   ) {
-    MaterialTheme(
-      colorScheme = colorScheme,
-      typography = Typography
-    ) {
-      val streamColors = if (darkTheme) {
-        StreamColors.defaultDarkColors().copy(
-          appBackground = BACKGROUND900,
-          primaryAccent = STREAM_PRIMARY,
-          ownMessagesBackground = STREAM_PRIMARY
-        )
-      } else {
-        StreamColors.defaultColors().copy(
-          primaryAccent = STREAM_PRIMARY,
-          ownMessagesBackground = STREAM_PRIMARY_LIGHT
-        )
-      }
-
-      ChatTheme(
-        colors = streamColors,
-        reactionIconFactory = GeminiReactionFactory(),
-        content = content
+    val streamColors = if (darkTheme) {
+      StreamColors.defaultDarkColors().copy(
+        appBackground = BACKGROUND900,
+        primaryAccent = STREAM_PRIMARY,
+        ownMessagesBackground = STREAM_PRIMARY
+      )
+    } else {
+      StreamColors.defaultColors().copy(
+        primaryAccent = STREAM_PRIMARY,
+        ownMessagesBackground = STREAM_PRIMARY_LIGHT
       )
     }
+
+    ChatTheme(
+      colors = streamColors,
+      reactionIconFactory = GeminiReactionFactory(),
+      content = content
+    )
   }
 }

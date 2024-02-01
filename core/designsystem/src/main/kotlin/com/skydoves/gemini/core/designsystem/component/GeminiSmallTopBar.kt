@@ -17,14 +17,16 @@
 package com.skydoves.gemini.core.designsystem.component
 
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.skydoves.gemini.core.designsystem.theme.GeminiComposeTheme
+import com.skydoves.gemini.core.designsystem.theme.WHITE200
+import io.getstream.chat.android.compose.ui.theme.ChatTheme
 
 @Composable
 fun GeminiSmallTopBar(title: String) {
@@ -33,12 +35,12 @@ fun GeminiSmallTopBar(title: String) {
     title = {
       Text(
         text = title,
-        color = MaterialTheme.colorScheme.tertiary,
-        style = MaterialTheme.typography.titleLarge
+        color = WHITE200,
+        fontSize = 22.sp
       )
     },
     colors = TopAppBarDefaults.mediumTopAppBarColors(
-      containerColor = MaterialTheme.colorScheme.primary
+      containerColor = ChatTheme.colors.primaryAccent
     )
   )
 }
