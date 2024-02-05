@@ -113,42 +113,26 @@ class ChatViewModel @Inject constructor(
 
   fun sendMessage(message: Message) {
     val containsAttachment = message.attachments.isNotEmpty()
+    messageItemSet.value += message.text
 
-    if (containsAttachment) {
-      val bitmaps = message.attachments.map {
-        val original = BitmapFactory.decodeStream(FileInputStream(it.upload))
-        Bitmap.createScaledBitmap(
-          original,
-          (original.width * 0.5f).toInt(),
-          (original.height * 0.5f).toInt(),
-          true
-        )
-      }
-      photoReasoning(message, bitmaps)
-    } else {
-      sendTextMessage(message.text)
-    }
-  }
-
-  private fun sendTextMessage(text: String) {
-    messageItemSet.value += text
     viewModelScope.launch {
       try {
-        val generativeChat = generativeChat.value ?: return@launch
-        val response = generativeChat.sendMessage(text)
-        val responseText = response.text
-        if (responseText != null) {
-          channelClient.sendMessage(
-            message = Message(
-              id = UUID.randomUUID().toString(),
-              cid = channelClient.cid,
-              text = responseText,
-              extraData = mutableMapOf(STREAM_CHANNEL_GEMINI_FLAG to true)
+        val responseText = if (containsAttachment) {
+          val bitmaps = message.attachments.map {
+            val original = BitmapFactory.decodeStream(FileInputStream(it.upload))
+            Bitmap.createScaledBitmap(
+              original,
+              (original.width * 0.5f).toInt(),
+              (original.height * 0.5f).toInt(),
+              true
             )
-          ).await()
-          messageItemSet.value -= text
-          streamLog { "gemini response success: $responseText" }
+          }
+          photoReasoning(message, bitmaps)
+        } else {
+          sendTextMessage(message.text)
         }
+        streamLog { "gemini response success: $responseText" }
+        messageItemSet.value -= message.text
       } catch (e: Exception) {
         val error = e.localizedMessage.orEmpty()
         messageItemSet.value -= messageItemSet.value
@@ -158,40 +142,45 @@ class ChatViewModel @Inject constructor(
     }
   }
 
-  private fun photoReasoning(message: Message, bitmaps: List<Bitmap>) {
+  private suspend fun sendTextMessage(text: String): String? {
+    val generativeChat = generativeChat.value ?: return null
+    val response = generativeChat.sendMessage(text)
+    val responseText = response.text
+    if (responseText != null) {
+      channelClient.sendMessage(
+        message = Message(
+          id = UUID.randomUUID().toString(),
+          cid = channelClient.cid,
+          text = responseText,
+          extraData = mutableMapOf(STREAM_CHANNEL_GEMINI_FLAG to true)
+        )
+      ).await()
+    }
+    return responseText
+  }
+
+  private suspend fun photoReasoning(message: Message, bitmaps: List<Bitmap>): String? {
     val text = message.text
     val prompt = "Look at the image(s), and then answer the following question: $text"
-
-    messageItemSet.value += text
-    viewModelScope.launch {
-      try {
-        val generativeModel = generativeModel.value ?: return@launch
-        val content = content {
-          for (bitmap in bitmaps) {
-            image(bitmap)
-          }
-          text(prompt)
-        }
-        val response = generativeModel.generateContent(content)
-        val responseText = response.text
-        if (responseText != null) {
-          channelClient.sendMessage(
-            message = Message(
-              id = UUID.randomUUID().toString(),
-              cid = channelClient.cid,
-              text = responseText,
-              extraData = mutableMapOf(STREAM_CHANNEL_GEMINI_FLAG to true)
-            )
-          ).await()
-          messageItemSet.value -= text
-          streamLog { "gemini response success: $responseText" }
-        }
-      } catch (e: Exception) {
-        val error = e.localizedMessage.orEmpty()
-        messageItemSet.value -= messageItemSet.value
-        mutableError.value = error
-        streamLog { "gemini response failed: $error" }
+    val generativeModel = generativeModel.value ?: return null
+    val content = content {
+      for (bitmap in bitmaps) {
+        image(bitmap)
       }
+      text(prompt)
     }
+    val response = generativeModel.generateContent(content)
+    val responseText = response.text
+    if (responseText != null) {
+      channelClient.sendMessage(
+        message = Message(
+          id = UUID.randomUUID().toString(),
+          cid = channelClient.cid,
+          text = responseText,
+          extraData = mutableMapOf(STREAM_CHANNEL_GEMINI_FLAG to true)
+        )
+      ).await()
+    }
+    return responseText
   }
 }
