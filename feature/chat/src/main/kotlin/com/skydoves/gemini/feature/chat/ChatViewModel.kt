@@ -25,7 +25,6 @@ import com.google.ai.client.generativeai.Chat
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.skydoves.gemini.core.data.chat.STREAM_CHANNEL_GEMINI_FLAG
-import com.skydoves.gemini.core.data.chat.geminiUser
 import com.skydoves.gemini.core.data.coroutines.asStateFlow
 import com.skydoves.gemini.core.data.repository.ChatRepository
 import com.skydoves.gemini.core.data.utils.Empty
@@ -88,7 +87,7 @@ class ChatViewModel @Inject constructor(
     val history = generativeChat.value?.history
     if (history?.isEmpty() == true) {
       messages.filterIsInstance(MessageItemState::class.java).forEach { messageState ->
-        val content = if (messageState.currentUser?.id == geminiUser.id) {
+        val content = if (messageState.message.extraData[STREAM_CHANNEL_GEMINI_FLAG] == true) {
           content(role = "model") { text(messageState.message.text) }
         } else {
           content(role = "user") { text(messageState.message.text) }
