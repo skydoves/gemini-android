@@ -26,6 +26,10 @@ The purpose of this repository is to demonstrate below:
 <img src="previews/preview2.gif" alt="drawing" width="269px" /></br>
 </p>
 
+## ✍️ Technical Content
+
+If you're interested in the overall architecture, each layer, Generative AI, Gemini SDK, and implementation details of this project, check out the following blog post: **[Build an AI Chat Android App With Google’s Generative AI](https://getstream.io/blog/android-generative-ai/)**
+
 <a href="https://getstream.io/chat/sdk/compose?utm_source=Github&utm_medium=Jaewoong_OSS&utm_content=Developer&utm_campaign=Github_Dec2024_Jaewoong_Gemini&utm_term=DevRelOs">
 <img src="https://user-images.githubusercontent.com/24237865/138428440-b92e5fb7-89f8-41aa-96b1-71a5486c5849.png" align="right" width="12%"/>
 </a>
