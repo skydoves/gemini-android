@@ -75,8 +75,7 @@ fun GeminiChannels(
       if (isInitialized) {
         ChannelsScreen(
           isShowingHeader = false,
-          isShowingSearch = true,
-          onItemClick = { channel ->
+          onChannelClick = { channel ->
             val key = channel.extraData[STREAM_RANDOM_CHANNEL_KEY].toString()
             composeNavigator.navigate(
               GeminiScreens.Messages.createRoute(
