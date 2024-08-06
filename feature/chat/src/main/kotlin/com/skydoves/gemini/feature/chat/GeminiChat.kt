@@ -235,6 +235,7 @@ fun GeminiChat(
             onThreadClick = { message -> listViewModel.openMessageThread(message) },
             onGiphyActionClick = { action -> listViewModel.performGiphyAction(action) },
             onQuotedMessageClick = { message -> listViewModel.scrollToMessage(message.id, null) },
+            reactionSorting = { _, _ -> 0 },
             onMediaGalleryPreviewResult = { result ->
               imagePreviewResultAction(
                 result,
@@ -319,7 +320,13 @@ private fun MessageDialogs(listViewModel: MessageListViewModel) {
       message = stringResource(
         id = io.getstream.chat.android.compose.R.string.stream_compose_flag_message_text
       ),
-      onPositiveAction = { listViewModel.flagMessage(flagAction.message) },
+      onPositiveAction = {
+        listViewModel.flagMessage(
+          message = flagAction.message,
+          reason = null,
+          customData = mapOf()
+        )
+      },
       onDismiss = { listViewModel.dismissMessageAction(flagAction) }
     )
   }
@@ -379,7 +386,9 @@ private fun BoxScope.MessagesScreenReactionsPicker(
           ),
           exit = slideOutVertically(
             targetOffsetY = { height -> height },
-            animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2)
+            animationSpec = tween(
+              durationMillis = AnimationConstants.DefaultDurationMillis / 2
+            )
           )
         ),
       message = selectedMessage,
@@ -487,7 +496,9 @@ private fun BoxScope.MessagesScreenMenus(
           ),
           exit = slideOutVertically(
             targetOffsetY = { height -> height },
-            animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2)
+            animationSpec = tween(
+              durationMillis = AnimationConstants.DefaultDurationMillis / 2
+            )
           )
         ),
       messageOptions = messageOptions,
@@ -524,7 +535,9 @@ private fun BoxScope.MessagesScreenMenus(
           ),
           exit = slideOutVertically(
             targetOffsetY = { height -> height },
-            animationSpec = tween(durationMillis = AnimationConstants.DefaultDurationMillis / 2)
+            animationSpec = tween(
+              durationMillis = AnimationConstants.DefaultDurationMillis / 2
+            )
           )
         ),
       currentUser = user,
