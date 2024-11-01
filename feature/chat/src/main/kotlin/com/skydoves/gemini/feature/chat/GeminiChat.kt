@@ -18,7 +18,6 @@ package com.skydoves.gemini.feature.chat
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.AnimationConstants
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -228,22 +227,24 @@ fun GeminiChat(
               )
           }
 
-          MessageContainer(
-            messageListItemState = messageState,
-            onLongItemClick = { message -> listViewModel.selectMessage(message) },
-            onReactionsClick = { message -> listViewModel.selectReactions(message) },
-            onThreadClick = { message -> listViewModel.openMessageThread(message) },
-            onGiphyActionClick = { action -> listViewModel.performGiphyAction(action) },
-            onQuotedMessageClick = { message -> listViewModel.scrollToMessage(message.id, null) },
-            reactionSorting = { _, _ -> 0 },
-            onMediaGalleryPreviewResult = { result ->
-              imagePreviewResultAction(
-                result,
-                listViewModel,
-                composerViewModel
-              )
-            }
-          )
+          Box(modifier = Modifier.padding(bottom = 6.dp)) {
+            MessageContainer(
+              messageListItemState = messageState,
+              onLongItemClick = { message -> listViewModel.selectMessage(message) },
+              onReactionsClick = { message -> listViewModel.selectReactions(message) },
+              onThreadClick = { message -> listViewModel.openMessageThread(message) },
+              onGiphyActionClick = { action -> listViewModel.performGiphyAction(action) },
+              onQuotedMessageClick = { message -> listViewModel.scrollToMessage(message.id, null) },
+              reactionSorting = { _, _ -> 0 },
+              onMediaGalleryPreviewResult = { result ->
+                imagePreviewResultAction(
+                  result,
+                  listViewModel,
+                  composerViewModel
+                )
+              }
+            )
+          }
         }
       }
 
@@ -356,7 +357,6 @@ private fun BoxScope.MessageMenus(
   )
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun BoxScope.MessagesScreenReactionsPicker(
   listViewModel: MessageListViewModel,
@@ -401,7 +401,6 @@ private fun BoxScope.MessagesScreenReactionsPicker(
   }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun BoxScope.AttachmentsPickerMenu(
   attachmentsPickerViewModel: AttachmentsPickerViewModel,
@@ -447,7 +446,6 @@ private fun BoxScope.AttachmentsPickerMenu(
   }
 }
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 private fun BoxScope.MessagesScreenMenus(
   listViewModel: MessageListViewModel,
